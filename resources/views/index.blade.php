@@ -10,6 +10,18 @@
 
 @section('container')
 	<div id="chartContainer" style="height: 300px; width:100%;"></div>
+	<div class="col-md-12">
+		<label ><h3 >Sector:</h3></label>
+	  	<label class="radio-inline">
+	    	<input type="radio" name="optionsRadios" id="optionsRadios1" value="A" onClick="cambiarAla('A')" >A
+	    </label>
+	    <label class="radio-inline">
+		    <input type="radio" name="optionsRadios" id="optionsRadios2" value="B" onClick="cambiarAla('B')">B
+  		</label>
+	</div >
+
+	<!--<button type="button" class="btn btn-primary" onClick="cambiarAla(capturar())">Aceptar</button>-->
+
 @endsection
 
 @section('js_functions')
@@ -27,6 +39,29 @@
 		// 	        }
 		// 	});
 		// });
+		    function capturar()
+
+		    {
+
+		        var resultado;
+		        var porNombre=document.getElementsByName("optionsRadios");
+
+		        // Recorremos todos los valores del radio button para encontrar el
+
+		        // seleccionado
+
+		        for(var i=0;i<porNombre.length;i++)
+
+		        {
+
+		            if(porNombre[i].checked)
+
+		                resultado=porNombre[i].value;
+
+		        }
+		        return resultado;
+
+		    }
 	</script>
 	<script type="text/javascript">
 
@@ -41,7 +76,7 @@
 	</script>
 
 	<script type="text/javascript">
-		window.onload = function () {
+		function cambiarAla(ala) {
 
 		// dataPoints
 		var dataPoints1 = [];
@@ -92,12 +127,12 @@
           }
 		});
 
-		var updateInterval = 5000;
+		var updateInterval = 500;
 		// initial value
 		var yValue1 = 20;
 
 		var time = new Date;
-		var dataLength = 10;
+		var dataLength = 5;
 		// starting at 9.30 am
 
 		var updateChart = function (count, myjson) {
@@ -114,7 +149,7 @@
 
 				// adding random value and rounding it to two digits.
 				if(count == 1){
-					var json = $.getJSON( "/getData/"+"A")
+					var json = $.getJSON( "/getData/"+ala)
 					    .done(function( data, textStatus, jqXHR ) {
 					        if ( console && console.log ) {
 					            console.log( "La solicitud se ha completado correctamente.");
@@ -163,7 +198,7 @@
 		};
 
 		var myjson = [];
-		$.getJSON( "/getData/"+"A")
+		$.getJSON( "/getData/"+ala)
 		    .done(function( data, textStatus, jqXHR ) {
 		        if ( console && console.log ) {
 		            console.log( "La solicitud se ha completado correctamente.");
