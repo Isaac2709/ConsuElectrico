@@ -19,50 +19,35 @@
 		    <input type="radio" name="optionsRadios" id="optionsRadios2" value="B" onClick="cambiarAla('B')">B
   		</label>
 	</div >
+	<div class="col-md-6">
+
+		<label >Consumo actual más alto: </label>
+		<label id="consActMasAlto"></label>
+		</br>
+		<label >Fecha: </label>
+		<label id="fechaConsMasAlto"></label>
+		</br>
+		<label >Sector: </label>
+		<label id="sectorConsMasAlto"></label>
+	</div>
+	<div class="col-md-6">
+		<label >Consumo actual más bajo: </label>
+		<label id="consActMasBajo"></label>
+		</br>
+		<label>Fecha: </label>
+		<label id="fechaConsMasBajo"></label>
+		</br>
+		<label >Sector: </label>
+		<label id="sectorConsMasBajo"></label>
+	</div>
+
 
 	<!--<button type="button" class="btn btn-primary" onClick="cambiarAla(capturar())">Aceptar</button>-->
 
 @endsection
 
 @section('js_functions')
-	<script type="text/javascript">
-		// $(document).ready(function(){
-		// 	$.getJSON( "/getData/"+"A")
-		// 	    .done(function( data, textStatus, jqXHR ) {
-		// 	        if ( console && console.log ) {
-		// 	            console.log( "La solicitud se ha completado correctamente." );
-		// 	        }
-		// 	    })
-		// 	    .fail(function( jqXHR, textStatus, errorThrown ) {
-		// 	        if ( console && console.log ) {
-		// 	            console.log( "Algo ha fallado: " +  textStatus );
-		// 	        }
-		// 	});
-		// });
-		    function capturar()
-
-		    {
-
-		        var resultado;
-		        var porNombre=document.getElementsByName("optionsRadios");
-
-		        // Recorremos todos los valores del radio button para encontrar el
-
-		        // seleccionado
-
-		        for(var i=0;i<porNombre.length;i++)
-
-		        {
-
-		            if(porNombre[i].checked)
-
-		                resultado=porNombre[i].value;
-
-		        }
-		        return resultado;
-
-		    }
-	</script>
+	
 	<script type="text/javascript">
 
 		function sleep(milliseconds) {
@@ -76,8 +61,16 @@
 	</script>
 
 	<script type="text/javascript">
-		function cambiarAla(ala) {
+		
+		var fechaMA;
+		var fechaMB;
+		var sectorMA;
+		var sectorMB;
 
+		function cambiarAla(ala) {
+			
+		var consumoActualMasAlto=0;
+		var consumoActualMasBajo=100;
 		// dataPoints
 		var dataPoints1 = [];
 
@@ -102,7 +95,7 @@
 				title: "Datos"
 			},
 			axisY:{
-				prefix: '$',
+				prefix: 'A',
 				includeZero: false
 			},
 			data: [{
@@ -110,7 +103,7 @@
 				type: "line",
 				xValueType: "dateTime",
 				showInLegend: true,
-				name: "Watts",
+				name: "Amperios",
 				dataPoints: dataPoints1
 			}],
           legend:{
@@ -142,6 +135,7 @@
 			// count is number of times loop runs to generate random dataPoints.
 			var mySQLDate;
 			var newDate;
+			var sector;
 			for (var i = 0; i < count; i++) {
 
 				// add interval duration to time
@@ -159,8 +153,24 @@
 					        yValue1 = data[0][length-1]['Reg_Vaue'];
 					        mySQLDate = data[0][length-1]['Reg_Date'];
 					        newDate =  new Date(Date.parse(mySQLDate.replace('-','/','g')));
+					        //sector=data[0][length-1]['Reg_Wing'];
 					        var watts =  dataPoints1[dataPoints1.length - 1]['y'];
 					        var date =  dataPoints1[dataPoints1.length - 1]['x'];
+					        if(yValue1>consumoActualMasAlto){
+					        	consumoActualMasAlto=yValue1;
+					        	document.getElementById('consActMasAlto').innerHTML= " "+consumoActualMasAlto;
+					        	document.getElementById('fechaConsMasAlto').innerHTML= " "+mySQLDate;
+					        	document.getElementById('sectorConsMasAlto').innerHTML= " "+ala;
+
+
+					        }
+					        if(yValue1<consumoActualMasBajo){
+					        	consumoActualMasBajo=yValue1;
+					        	document.getElementById('consActMasBajo').innerHTML= " "+consumoActualMasBajo;
+					        	document.getElementById('fechaConsMasBajo').innerHTML= " "+mySQLDate;
+					        	document.getElementById('sectorConsMasBajo').innerHTML= " "+ala;
+
+					        }
 					        if(watts != yValue1 && date != newDate.getTime()){
 						        dataPoints1.push({
 									x: newDate.getTime(),
@@ -179,6 +189,22 @@
 					mySQLDate = myjson[0][i]['Reg_Date'];
 					newDate=  new Date(Date.parse(mySQLDate.replace('-','/','g')));
 
+					if(yValue1>consumoActualMasAlto){
+					        	consumoActualMasAlto=yValue1;
+					        	document.getElementById('consActMasAlto').innerHTML= " "+consumoActualMasAlto;
+					        	document.getElementById('fechaConsMasAlto').innerHTML= " "+mySQLDate;
+					        	document.getElementById('sectorConsMasAlto').innerHTML= " "+ala;
+
+
+					        }
+			        if(yValue1<consumoActualMasBajo){
+			        	consumoActualMasBajo=yValue1;
+			        	document.getElementById('consActMasBajo').innerHTML= " "+consumoActualMasBajo;
+			        	document.getElementById('fechaConsMasBajo').innerHTML= " "+mySQLDate;
+			        	document.getElementById('sectorConsMasBajo').innerHTML= " "+ala;
+
+			        }
+
 					dataPoints1.push({
 						x: newDate.getTime(),
 						y: Math.round(yValue1 * 100 ) / 100
@@ -187,7 +213,9 @@
 			};
 
 			// updating legend text with  updated with y Value
-			chart.options.data[0].legendText = " Medición " + yValue1;
+			chart.options.data[0].legendText = " Medición: " + yValue1;
+			//chart.options.data[1].legendText = "Consumo actual más alto: " + consumoActualMasAlto;
+
 
 			if (dataPoints1.length > dataLength)
 			{
