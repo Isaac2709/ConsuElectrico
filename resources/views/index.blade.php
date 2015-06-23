@@ -23,6 +23,7 @@
 
 		<label >Consumo actual más alto: </label>
 		<label id="consActMasAlto"></label>
+		<label> amperios</label>
 		</br>
 		<label >Fecha: </label>
 		<label id="fechaConsMasAlto"></label>
@@ -33,6 +34,7 @@
 	<div class="col-md-6">
 		<label >Consumo actual más bajo: </label>
 		<label id="consActMasBajo"></label>
+		<label> amperios</label>
 		</br>
 		<label>Fecha: </label>
 		<label id="fechaConsMasBajo"></label>
@@ -125,7 +127,7 @@
 		var yValue1 = 20;
 
 		var time = new Date;
-		var dataLength = 5;
+		var dataLength = 10;
 		// starting at 9.30 am
 
 		var updateChart = function (count, myjson) {
@@ -213,7 +215,7 @@
 			};
 
 			// updating legend text with  updated with y Value
-			chart.options.data[0].legendText = " Medición: " + yValue1;
+			chart.options.data[0].legendText = " Medición: " + yValue1+ " amperios.";
 			//chart.options.data[1].legendText = "Consumo actual más alto: " + consumoActualMasAlto;
 
 

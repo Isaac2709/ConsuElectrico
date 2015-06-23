@@ -17,6 +17,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $registry = Registry::all();
+        // $registry = Registry::where('Reg_Wing', '=', $Reg_Wing)->orderBy('Reg_Date', 'asc')->get();
+        dd($registry);
         return view('index');
     }
 
